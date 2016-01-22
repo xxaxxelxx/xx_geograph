@@ -59,8 +59,9 @@ if [ $? -eq 0 ]; then
 			    C_T_START="$(date -d @${C_T_E_START} +%Y-%m-%dT%H:%M:%SZ)"
 #			    echo "+ + + + +"
 #			    echo "$LINE"
-			    A_LATLON=($(geoiplookup $C_IP | grep 'City' | rev | awk '{print $3OFS$4}' | sed 's|\,||g' | rev))
+			    A_LATLON=($(geoiplookup $C_IP | grep 'City' | rev 2>/dev/null | awk '{print $3OFS$4}' | sed 's|\,||g' | rev 2>/dev/null))
 			    C_LAT=${A_LATLON[0]}; C_LON=${A_LATLON[1]}
+			    if [ "x$C_LAT" == "x"  -o "x$C_LON" == "x" ]; then continue; fi
 #			    echo "$C_IP $C_DUR $C_MOUNT $C_LAT $C_LON $C_T_START $C_T_STOP"
 			    FOLDER_TMP="/tmp/geo.$CUSTOMER.$C_MOUNT.folder"
 			    test -r $FOLDER_TMP
