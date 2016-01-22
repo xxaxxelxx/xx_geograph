@@ -12,7 +12,7 @@ if [ $? -eq 0 ]; then
     fi
 fi
 
-#./geomat.sh $@
+./geomat.sh $@
 
 bash
 exit
