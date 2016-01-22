@@ -12,6 +12,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -qq -y install sudo
 
 RUN apt-get -qq -y install mc 
+#RUN apt-get -qq -y install zip 
 RUN apt-get -qq -y install less
 RUN apt-get -qq -y install bc 
 RUN apt-get -qq -y install geoip-bin
@@ -21,7 +22,6 @@ RUN apt-get clean
 VOLUME /customer
 
 COPY ./*.sh /
-
 
 ENTRYPOINT [ "/entrypoint.sh" ]
 #CMD [ "bash" ]
