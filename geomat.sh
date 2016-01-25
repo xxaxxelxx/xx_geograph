@@ -27,7 +27,8 @@ if [ $? -eq 0 ]; then
 		    NOL_ACCESS_OLD=$(cat $SEMA)
 		fi
 		NOL_ACCESS=$(zcat $WORKDIR/access.$TSTAMP.log.gz | wc -l)
-		if [ $NOL_ACCESS -eq $NOL_ACCESS_OLD ]; then
+		test -r $WORKDIR/geo.$TSTAMP.kmz
+		if [ $? -ne 0 -a $NOL_ACCESS -eq $NOL_ACCESS_OLD ]; then
 		    echo $NOL_ACCESS > $SEMA
 		    zcat $WORKDIR/access.$TSTAMP.log.gz | \
 		    (
