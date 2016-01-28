@@ -17,6 +17,9 @@ if [ $? -eq 0 ]; then
         NOW=$(date +%s)
         TSTAMP=$(date -d @$(($NOW - $TOFFSET)) +%Y-%m-%d)
 
+	FILE_KML=geoip.$TSTAMP.kml
+	FILE_KMZ=geoip.$TSTAMP.kmz
+
         test -r $WORKDIR/access.$TSTAMP.log.gz
         if [ $? -eq 0 ]; then
 	NOL_ACCESS_OLD=0
@@ -29,7 +32,7 @@ if [ $? -eq 0 ]; then
 	if [ "x$NOL_ACCESS" != "x" ]; then 
 	    echo $NOL_ACCESS > $SEMA
 	fi
-	test -r $WORKDIR/$TSTAMP.geoip.kmz
+	test -r $WORKDIR/$FILE_KMZ
 	if [ $? -ne 0 -a $NOL_ACCESS -eq $NOL_ACCESS_OLD ]; then
 	    zcat $WORKDIR/access.$TSTAMP.log.gz | \
 	    (
@@ -68,20 +71,20 @@ if [ $? -eq 0 ]; then
 	        fi
 	        echo "<Placemark><name></name><styleUrl>#style_$CUSTOMER</styleUrl><Point><coordinates>${C_LON},${C_LAT}</coordinates></Point><TimeSpan><begin>$C_T_START</begin><end>$C_T_STOP</end></TimeSpan></Placemark>" >> $FOLDER_TMP
 	    done
-	    test -r $WORKDIR/$TSTAMP.geoip.kml && rm -f $WORKDIR/$TSTAMP.geoip.kml
-	    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $WORKDIR/$TSTAMP.geoip.kml
-	    echo "<kml xmlns=\"http://www.opengis.net/kml/2.2\">" >> $WORKDIR/$TSTAMP.geoip.kml
-	    echo "<Document>" >> $WORKDIR/$TSTAMP.geoip.kml
-	    echo "<name>$TSTAMP</name>" >> $WORKDIR/$TSTAMP.geoip.kml
-	    echo "<Style id=\"style_$CUSTOMER\"><IconStyle><scale>0.4</scale><Icon><href>https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0</href></Icon></IconStyle></Style>" >> $WORKDIR/$TSTAMP.geoip.kml
+	    test -r $WORKDIR/$FILE_KML && rm -f $WORKDIR/$FILE_KML
+	    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $WORKDIR/$FILE_KML
+	    echo "<kml xmlns=\"http://www.opengis.net/kml/2.2\">" >> $WORKDIR/$FILE_KML
+	    echo "<Document>" >> $WORKDIR/$FILE_KML
+	    echo "<name>$TSTAMP</name>" >> $WORKDIR/$FILE_KML
+	    echo "<Style id=\"style_$CUSTOMER\"><IconStyle><scale>0.4</scale><Icon><href>https://storage.googleapis.com/support-kms-prod/SNP_2752125_en_v0</href></Icon></IconStyle></Style>" >> $WORKDIR/$FILE_KML
 	    for FOLDER_FILE in /tmp/geo.$CUSTOMER.*.folder; do
 	        test -r $FOLDER_FILE || continue
 	        echo "</Folder>" >> $FOLDER_FILE
-	        cat $FOLDER_FILE >> $WORKDIR/$TSTAMP.geoip.kml
+	        cat $FOLDER_FILE >> $WORKDIR/$FILE_KML
 	        rm -f $FOLDER_FILE
 	    done
-	    echo "</Document></kml>" >> $WORKDIR/$TSTAMP.geoip.kml
-	    zip $WORKDIR/$TSTAMP.geoip.kmz $WORKDIR/$TSTAMP.geoip.kml > /dev/null 2>&1 && rm -f $WORKDIR/$TSTAMP.geoip.kml 
+	    echo "</Document></kml>" >> $WORKDIR/$FILE_KML
+	    zip $WORKDIR/$FILE_KMZ $WORKDIR/$FILE_KML > /dev/null 2>&1 && rm -f $WORKDIR/$FILE_KML 
 	    )
 	fi
         fi
