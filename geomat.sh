@@ -3,12 +3,12 @@ SPLITBASEDIR="/customer"
 CUSTOMER=$1
 WORKDIR="$SPLITBASEDIR/$CUSTOMER/logs"
 SLEEP=$((3600 * 1))
-SLEEP=600
+#SLEEP=600
 MINDUR=60
 MAXAGE=366
 
 while true; do
-    find /tmp/geo.*.sema -mmin +31 -exec rm -f {} \; > /dev/null 2>&1
+    find /tmp/geo.*.sema -mtime +31 -exec rm -f {} \; > /dev/null 2>&1
 
     test -r $WORKDIR
     if [ $? -eq 0 ]; then
