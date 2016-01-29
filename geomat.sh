@@ -3,7 +3,7 @@ SPLITBASEDIR="/customer"
 CUSTOMER=$1
 WORKDIR="$SPLITBASEDIR/$CUSTOMER/logs"
 SLEEP=$((3600 * 1))
-#SLEEP=60
+SLEEP=600
 MINDUR=60
 MAXAGE=366
 
@@ -37,10 +37,10 @@ while true; do
 			echo $NOL_ACCESS > $SEMA
 		    fi
 		    if [ $NOL_ACCESS -eq $NOL_ACCESS_OLD ]; then
+			rm -f /tmp/geo.$CUSTOMER.*.folder > /dev/null 2>&1
 			zcat $WORKDIR/access.$TSTAMP.log.gz | \
 			(
 			C_IP=""; C_DUR=""; C_MOUNT=""
-			rm -f /tmp/geo.$CUSTOMER.*.folder > /dev/null 2>&1
 			while read LINE; do
 	    		    C_IP=$(echo "$LINE" | awk '{print $1}')
 	    		    C_DUR=$(echo "${LINE##*\ }")
@@ -74,6 +74,7 @@ while true; do
 	    		    fi
 	    		    echo "<Placemark><name></name><styleUrl>#style_$CUSTOMER</styleUrl><Point><coordinates>${C_LON},${C_LAT}</coordinates></Point><TimeSpan><begin>$C_T_START</begin><end>$C_T_STOP</end></TimeSpan></Placemark>" >> $FOLDER_TMP
 			done
+			)
 			test -r $WORKDIR/$FILE_KML && rm -f $WORKDIR/$FILE_KML
 			echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > $WORKDIR/$FILE_KML
 			echo "<kml xmlns=\"http://www.opengis.net/kml/2.2\">" >> $WORKDIR/$FILE_KML
@@ -88,7 +89,6 @@ while true; do
 			done
 			echo "</Document></kml>" >> $WORKDIR/$FILE_KML
 			zip $WORKDIR/$FILE_KMZ $WORKDIR/$FILE_KML > /dev/null 2>&1 && rm -f $WORKDIR/$FILE_KML 
-			)
 		    fi
     		fi
 	    fi
