@@ -15,7 +15,6 @@ while true; do
     if [ $? -eq 0 ]; then
 	TOFFSET=$((86400 * 2))
 	while [ $TOFFSET -lt $((86400 * 3)) ]; do
-    	    find $WORKDIR -type f -mtime +${MAXAGE} -exec rm {} \;
 
     	    NOW=$(date +%s)
     	    TSTAMP=$(date -d @$(($NOW - $TOFFSET)) +%Y-%m-%d)
@@ -24,6 +23,7 @@ while true; do
 	    FILE_KMZ=geoip.$TSTAMP.kmz
 
 	    test -d $GEOIPDIR || mkdir -p $GEOIPDIR 
+    	    find $GEOIPDIR -type f -mtime +${MAXAGE} -exec rm {} \;
 	    test -r $GEOIPDIR/$FILE_KMZ
     	    if [ $? -ne 0 ]; then
     		test -r $WORKDIR/access.$TSTAMP.log.gz
