@@ -2,6 +2,7 @@
 SPLITBASEDIR="/customer"
 CUSTOMER=$1
 WORKDIR="$SPLITBASEDIR/$CUSTOMER/logs"
+GEOIPDIR="$SPLITBASEDIR/$CUSTOMER/geoip"
 SLEEP=$((3600 * 1))
 #SLEEP=600
 MINDUR=60
@@ -22,7 +23,8 @@ while true; do
 	    FILE_KML=geoip.$TSTAMP.kml
 	    FILE_KMZ=geoip.$TSTAMP.kmz
 
-	    test -r $WORKDIR/$FILE_KMZ
+	    test -d $GEOIPDIR || mkdir -p $GEOIPDIR 
+	    test -r $GEOIPDIR/$FILE_KMZ
     	    if [ $? -ne 0 ]; then
     		test -r $WORKDIR/access.$TSTAMP.log.gz
     		if [ $? -eq 0 ]; then
@@ -88,7 +90,7 @@ while true; do
 	    		    rm -f $FOLDER_FILE
 			done
 			echo "</Document></kml>" >> $WORKDIR/$FILE_KML
-			zip $WORKDIR/$FILE_KMZ $WORKDIR/$FILE_KML > /dev/null 2>&1 && rm -f $WORKDIR/$FILE_KML 
+			zip $GEOIPDIR/$FILE_KMZ $WORKDIR/$FILE_KML > /dev/null 2>&1 && rm -f $WORKDIR/$FILE_KML 
 		    fi
     		fi
 	    fi
