@@ -1,5 +1,5 @@
 # ***GEOGRAPH***
-# Customer geographing module
+# Google Earth module
 # Part of Dockerized Distributed Streaming System
 
 [xxaxxelxx/xx_geograph](https://index.docker.io/u/xxaxxelxx/xx_geograph/)
